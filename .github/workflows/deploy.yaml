@@ -1,0 +1,21 @@
+name: Deploy to Azure Storage
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3  # This will check out your code
+
+      - name: Upload to Azure Storage
+        uses: azure/CLI@v1  # Use the Azure CLI action to run commands
+        with:
+          inlineScript: |
+            # Upload files to Azure Storage Static Website ($web container)
+            az storage blob upload-batch --destination '$web' --source . --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.azure_key }}
